@@ -7,6 +7,11 @@ function Client(socket){
 
 var clients = [];
 
+// http://www.davidmclifton.com/2011/07/22/simple-telnet-server-in-node-js/
+function cleanInput(data){
+	return data.toString().replace(/(\r\n|\n|\r)/gm,"");
+}
+
 var server = net.createServer(function (socket) {
 	var client = new Client(socket);
 	clients.push(client);
@@ -14,8 +19,9 @@ var server = net.createServer(function (socket) {
 	socket.write("Welcome, enter your username: ");
 
 	socket.on('data', function(data) {
+		var cleanData = cleanInput(data)
 		if(client.name === null){
-			client.name = data;
+			client.name = cleanData;
 			socket.write("Enter :quit to quit.\n");
 			socket.write("======================\n");
 			clients.forEach(function(c) {
@@ -26,7 +32,7 @@ var server = net.createServer(function (socket) {
 			return;
 		}
 
-		if(data === ':quit'){
+		if(cleanData === ':quit'){
 			socket.end();
 
 			return;

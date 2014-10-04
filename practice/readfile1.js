@@ -14,7 +14,10 @@ fs.open('./readfile1.js','r', function opened(err,fd) {
 			if(err) { throw err }
 			console.log('just read ' + readBytes + ' bytes');
 			if(readBytes > 0) {
+				var data = readBuffer.toString("utf8",0,readBuffer.length);
 				console.log(readBuffer.slice(0,readBytes));
+				console.log(data);
 			}
+			fs.close(fd);
 		});
 });
